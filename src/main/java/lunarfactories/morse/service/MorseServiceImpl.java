@@ -3,13 +3,19 @@ package lunarfactories.morse.service;
 import lunarfactories.morse.service.api.MorseService;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static lunarfactories.morse.service.api.ApiConstants.*;
 
 @Service
 public class MorseServiceImpl implements MorseService {
 
-    private HashMap<Character, String> vocabulary = new HashMap<>();
+    private final HashMap<Character, String> vocabulary = new HashMap<>();
 
     @PostConstruct
     private void makeVocabulary() {
@@ -20,19 +26,17 @@ public class MorseServiceImpl implements MorseService {
 
     @Override
     public String translateIp(String ip) {
-        String res = "";
-        if (isIp(ip)) {
-            for (int i = 0; i < ip.length(); i++) {
-                res = res + vocabulary.get(ip.charAt(i));
-            }
-        } else {
-            res = "Not IP";
+        if (!validate(ip))
+            return "Wrong IP";
+        StringBuilder res = new StringBuilder();
+        for (char c: ip.toCharArray()) {
+            res.append(vocabulary.get(c));
         }
-        return res;
+        return res.toString();
     }
 
-    private Boolean isIp(String ip) {
-        return ip.matches(IP_PATTERN);
+    private boolean validate(String ip) {
+        return Objects.nonNull(ip) && ip.matches(IP_PATTERN);
     }
 
 }
