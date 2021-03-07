@@ -1,0 +1,5 @@
+# Project exclude paths
+/target/
+/.idea/
+Copy (1) pom.xml
+morse-service.iml
